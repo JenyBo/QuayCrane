@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Quay Cranes</title>
+    <meta charset="utf8">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/themify-icons-font/themify-icons/themify-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div id="header">
+        <h1 class="d-flex p-2 bd-highlight justify-content-center">HỆ THỐNG ĐIỀU PHỐI QUAY CRANES</h1>
+    </div>
+    <div id="content">
+        <div class="content-input">
+            <form>
+                <div class="form-group">
+                    <label for="inputTime">Thời điểm tàu cập bến:</label>
+                    <div class="input-group">
+                        <div class="input-group">
+                            <input type="text" id="datetimepicker1" class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="datepickerIcon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputNumberContainer">Số container/bay 1:</label>
+                    <input type="text" class="form-control" id="inputNumberContainer1" placeholder="Nhập số container">
+                </div>
+                <div id="additionalBays"></div>
+                <button type="button" class="btn btn-secondary" id="addBayBtn">Add Bay</button>
+                <button type="submit" class="btn btn-primary">Solve</button>
+            </form>
+        </div>
+        <div class="content-output">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="15">Your Table Header</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop to generate 15 rows -->
+                    <?php for ($i = 1; $i <= 15; $i++) : ?>
+                        <tr>
+                            <!-- Loop to generate 15 cells in each row -->
+                            <?php for ($j = 1; $j <= 15; $j++) : ?>
+                                <td>Cell <?= $i ?>-<?= $j ?></td>
+                            <?php endfor; ?>
+                        </tr>
+                    <?php endfor; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize flatpickr
+        flatpickr("#datetimepicker1", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+
+        // Make the calendar icon clickable
+        document.getElementById('datepickerIcon').addEventListener('click', function () {
+            document.getElementById('datetimepicker1').click();
+        });
+
+        // Add functionality to dynamically add input fields for each Bay
+        document.getElementById('addBayBtn').addEventListener('click', function () {
+            // Get the number of existing bays
+            const bayNumber = document.querySelectorAll('[id^="inputNumberContainer"]').length + 1;
+
+            // Create a new input element
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.className = 'form-control';
+            newInput.placeholder = `Nhập số container/bay ${bayNumber}`;
+            newInput.id = `inputNumberContainer${bayNumber}`;
+
+            // Append the new input to the additionalBays container
+            document.getElementById('additionalBays').appendChild(newInput);
+            
+            // Add a line break for spacing
+            document.getElementById('additionalBays').appendChild(document.createElement('br'));
+        });
+    </script>
+</body>
+
+</html>
