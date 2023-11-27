@@ -71,11 +71,11 @@ function quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime) 
             let value = getMaxContainerValue(qcsList);
             totalTime = totalTime + value / transferCapacity + (count - 1) * travelTime;
 
-            contentOutputDiv.innerHTML = `<p>Total time for transportation: ${totalTime.toFixed(2)} hours</p>`;
+            contentOutputDiv.innerHTML = `<p>Tổng thời gian vận chuyển: ${totalTime.toFixed(2)} hours</p>`;
 
             // Display individual QuayCrane information
             qcsList.forEach((qc) => {
-                contentOutputDiv.innerHTML += `<p>QuayCrane ${qc.index} worked on ${qc.containersWorked} containers.</p>`;
+                contentOutputDiv.innerHTML += `<p>QuayCrane ${qc.index} đã vận chuyển được ${qc.containersWorked} containers.</p>`;
             });
 
             return totalTime;
@@ -98,7 +98,7 @@ document.getElementById('quayCraneForm').addEventListener('submit', function (ev
     const totalTime = quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime);
 
     console.log(calculateArrivalTime(inputTimeValue, 9.5))
-    contentOutputDiv.innerHTML += `<p>Arrival time plus total time: ${calculateArrivalTime(inputTimeValue, 9.5)}</p>`;
+    contentOutputDiv.innerHTML += `<p>Thời gian hoàn thành: ${calculateArrivalTime(inputTimeValue, 9.5)}</p>`;
     // Update the HTML or perform other actions based on the result
 });
 
