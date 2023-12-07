@@ -46,13 +46,14 @@ function updateContainers(bayContainers, qcsList, count, transferCapacity, trave
     }
 }
 
-function quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime) {
+function quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime, inputHour) {
     let qcsList = [];
     for (let i = 0; i < numQCs; ++i) {
         let qc = {
             index: i + 1,
             containers: bayContainers[i],
-            containersWorked: 0
+            containersWorked: 0,
+            containersWorkedOnBays: []
         };
         qcsList.push(qc);
     }
@@ -60,6 +61,9 @@ function quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime) 
     let count = 1;
     while (true) {
         let minContainers = getMinContainerValue(qcsList);
+        for (let qc of qcsList) {
+            qc.containersWorkedOnBays.push(minContainers);
+        }
         totalTime += 1.0 * minContainers / transferCapacity;
         subtractAllContainer(qcsList, 0, qcsList.length, minContainers);
         updateContainers(bayContainers, qcsList, count, transferCapacity, travelTime);
@@ -67,6 +71,8 @@ function quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime) 
         if (count === bayContainers.length - numQCs + 1) {
             for (let qc of qcsList) {
                 qc.containersWorked += qc.containers;
+                qc.containersWorkedOnBays.push(qc.containers);
+                console.log(qc.containersWorkedOnBays)
             }
             let value = getMaxContainerValue(qcsList);
             totalTime = totalTime + value / transferCapacity + (count - 1) * travelTime;
@@ -76,8 +82,16 @@ function quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime) 
             // Display individual QuayCrane information
             qcsList.forEach((qc) => {
                 contentOutputDiv.innerHTML += `<p>QuayCrane ${qc.index} đã vận chuyển được ${qc.containersWorked} containers.</p>`;
+            
+                let accumulatedTime = inputHour;
+                qc.containersWorkedOnBays.forEach((containers, index) => {
+                    const startTime = accumulatedTime;
+                    accumulatedTime += (containers / transferCapacity) + travelTime; // Include travel time to the next bay
+                    const completionTime = accumulatedTime;
+            
+                    contentOutputDiv.innerHTML += `<p>On Bay ${index + 1}, QuayCrane ${qc.index} vận chuyển ${containers} containers. Bắt đầu: ${startTime.toFixed(2)}h, Kết thúc: ${completionTime.toFixed(2)}h</p>`;
+                });
             });
-
             return totalTime;
         }
     }
@@ -92,10 +106,11 @@ document.getElementById('quayCraneForm').addEventListener('submit', function (ev
         bayContainers.push(parseInt(input.value) || 0);
     });
     const inputTimeValue = document.getElementById('datetimepicker1').value;
+    const inputHour = new Date(inputTimeValue).getHours();
     const numQCs = parseInt(document.getElementById('inputNumberQC').value) || 0;
     const transferCapacity = parseInt(document.getElementById('inputProductivity').value) || 0;
     const travelTime = parseFloat(document.getElementById('inputTimeMoveQC').value) || 0;
-    const totalTime = quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime);
+    const totalTime = quayCraneSolution(bayContainers, numQCs, transferCapacity, travelTime, inputHour);
 
     console.log(calculateArrivalTime(inputTimeValue, 9.5))
     contentOutputDiv.innerHTML += `<p>Thời gian hoàn thành: ${calculateArrivalTime(inputTimeValue, 9.5)}</p>`;
